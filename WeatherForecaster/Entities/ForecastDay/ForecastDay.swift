@@ -15,3 +15,21 @@ struct DayForecast {
     fileprivate(set) var lowTemp: Temperature
     fileprivate(set) var imageURL: URL
 }
+
+extension DayForecast: Mappable {
+    
+    init() {
+        self.init(date: DateEntity(), highTemp: Temperature(), lowTemp: Temperature(), imageURL: URL(string: "https://www.apple.com")!)
+    }
+    
+    static func makeInstance(_ map: Map) -> DayForecast? {
+        return DayForecast()
+    }
+    
+    mutating func map(with map: Map) {
+        map.bind(&date, key: "date")
+        map.bind(&highTemp, key: "high")
+        map.bind(&lowTemp, key: "low")
+        map.bind(&imageURL, key: "icon_url")
+    }
+}

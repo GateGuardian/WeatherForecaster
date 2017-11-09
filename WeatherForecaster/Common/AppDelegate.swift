@@ -18,14 +18,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         //Testing Gateway
-//        let locationGateway = CoreGateway(configuration: WebServiceConfiguration.default, restClient: RestClient())
-//        let currentLocation = CLLocation(latitude: 48.6212534, longitude: 22.2849621)
-//        let _ = locationGateway.geoLocation(withLocation: currentLocation) { (locationResponse) in
-//            switch locationResponse {
-//            case .success(let data) : print(data)
-//            case .failure(let error) : print(error)
-//            }
-//        }
+        let locationGateway = CoreGateway(configuration: WebServiceConfiguration.default, restClient: RestClient())
+        let currentLocation = CLLocation(latitude: 48.6212534, longitude: 22.2849621)
+        let _ = locationGateway.geoLocation(withLocation: currentLocation) { (locationResponse) in
+            switch locationResponse {
+            case .success(let data) :
+                print(data)
+                let _ = locationGateway.fetchCurrentConditions(location: data, completion: { (response) in
+                    switch response {
+                    case .success(let conditions) : print(conditions)
+                    case .failure(let error): print(error)
+                    }
+                })
+            case .failure(let error) : print(error)
+            }
+        }
         
         
         

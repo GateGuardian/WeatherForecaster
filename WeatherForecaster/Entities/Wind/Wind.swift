@@ -9,7 +9,24 @@
 import Foundation
 
 struct Wind {
-    var direction: String
-    var speedMph: String
-    var speedKmh: String
+    fileprivate(set) var direction: String
+    fileprivate(set) var speedMph: String
+    fileprivate(set) var speedKmh: String
+}
+
+extension Wind: Mappable {
+    
+    init() {
+        self.init(direction: "", speedMph: "", speedKmh: "")
+    }
+    
+    static func makeInstance(_ map: Map) -> Wind? {
+        return Wind()
+    }
+    
+    mutating func map(with map: Map) {
+        map.bind(&direction, key: "wind_dir")
+        map.bind(&speedMph, key: "wind_mph")
+        map.bind(&speedKmh, key: "wind_kph")
+    }
 }

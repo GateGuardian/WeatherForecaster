@@ -33,6 +33,7 @@
 		B49013281FB4929B004622D6 /* ForecastDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = B49013271FB4929B004622D6 /* ForecastDay.swift */; };
 		B490132B1FB4939A004622D6 /* CurrentConditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B490132A1FB4939A004622D6 /* CurrentConditions.swift */; };
 		B490132E1FB49DF7004622D6 /* Wind.swift in Sources */ = {isa = PBXBuildFile; fileRef = B490132D1FB49DF7004622D6 /* Wind.swift */; };
+		B49013361FB4BFD9004622D6 /* CurrentConditionsGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = B49013351FB4BFD9004622D6 /* CurrentConditionsGateway.swift */; };
 		B4F08CDC1FB31AE2002148E2 /* CoreGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F08CDB1FB31AE2002148E2 /* CoreGateway.swift */; };
 		B4F08CDE1FB31C69002148E2 /* ResponseError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F08CDD1FB31C69002148E2 /* ResponseError.swift */; };
 /* End PBXBuildFile section */
@@ -67,6 +68,7 @@
 		B49013271FB4929B004622D6 /* ForecastDay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForecastDay.swift; sourceTree = "<group>"; };
 		B490132A1FB4939A004622D6 /* CurrentConditions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentConditions.swift; sourceTree = "<group>"; };
 		B490132D1FB49DF7004622D6 /* Wind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wind.swift; sourceTree = "<group>"; };
+		B49013351FB4BFD9004622D6 /* CurrentConditionsGateway.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentConditionsGateway.swift; sourceTree = "<group>"; };
 		B4F08CDB1FB31AE2002148E2 /* CoreGateway.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreGateway.swift; sourceTree = "<group>"; };
 		B4F08CDD1FB31C69002148E2 /* ResponseError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseError.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -159,8 +161,8 @@
 		B458F6D91FB1FFD000E955BE /* Entities */ = {
 			isa = PBXGroup;
 			children = (
-				B490132C1FB49DE8004622D6 /* Wind */,
 				B49013291FB49390004622D6 /* CurrentConditions */,
+				B490132C1FB49DE8004622D6 /* Wind */,
 				B49013261FB49283004622D6 /* ForecastDay */,
 				B49013231FB4910D004622D6 /* Temperature */,
 				B49013201FB49090004622D6 /* DateEntity */,
@@ -259,13 +261,21 @@
 			path = Wind;
 			sourceTree = "<group>";
 		};
+		B49013341FB4BFCD004622D6 /* CurrentConditionsGateway */ = {
+			isa = PBXGroup;
+			children = (
+				B49013351FB4BFD9004622D6 /* CurrentConditionsGateway.swift */,
+			);
+			path = CurrentConditionsGateway;
+			sourceTree = "<group>";
+		};
 		B4F08CD71FB31AD4002148E2 /* Gateways */ = {
 			isa = PBXGroup;
 			children = (
 				B4F08CD81FB31AD4002148E2 /* CoreGateway */,
+				B49013341FB4BFCD004622D6 /* CurrentConditionsGateway */,
 				B49013171FB36FB5004622D6 /* GeoLocationGateway */,
 				B4F08CD91FB31AD4002148E2 /* ForecastWeatherGateway */,
-				B4F08CDA1FB31AD4002148E2 /* TodayWeatherGateway */,
 			);
 			path = Gateways;
 			sourceTree = "<group>";
@@ -286,13 +296,6 @@
 				B490131A1FB37D78004622D6 /* ForecastWeatherGateway.swift */,
 			);
 			path = ForecastWeatherGateway;
-			sourceTree = "<group>";
-		};
-		B4F08CDA1FB31AD4002148E2 /* TodayWeatherGateway */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = TodayWeatherGateway;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -377,6 +380,7 @@
 				B49013161FB35F91004622D6 /* ResponseData.swift in Sources */,
 				B49013191FB36FC0004622D6 /* GeoLocationGateway.swift in Sources */,
 				B490130F1FB337C9004622D6 /* JSONValueConvertibleRawRepresentable.swift in Sources */,
+				B49013361FB4BFD9004622D6 /* CurrentConditionsGateway.swift in Sources */,
 				B4F08CDE1FB31C69002148E2 /* ResponseError.swift in Sources */,
 				B490131B1FB37D78004622D6 /* ForecastWeatherGateway.swift in Sources */,
 				B490130C1FB337C9004622D6 /* JSONValueConvertibleContainer.swift in Sources */,

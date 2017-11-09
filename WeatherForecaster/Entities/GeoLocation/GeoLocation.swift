@@ -12,6 +12,12 @@ struct GeoLocation {
     fileprivate(set) var country: String
     fileprivate(set) var state: String
     fileprivate(set) var city: String
+    
+    func urlPath() -> String {
+        var path = country == GeoLocation.USACountryName ? "\(state)" : "\(country)" 
+        path += "/\(city)"
+        return path
+    }
 }
 
 extension GeoLocation: Mappable {
@@ -29,5 +35,9 @@ extension GeoLocation: Mappable {
         map.bind(&state, key: "state")
         map.bind(&city, key: "city")
     }
+}
+
+extension GeoLocation {
+    static fileprivate let USACountryName = "USA"
 }
 

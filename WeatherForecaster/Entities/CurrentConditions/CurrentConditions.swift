@@ -10,14 +10,38 @@ import Foundation
 
 //Current Weather Conditions
 struct CurrentConditions {
-    var date: DateEntity
     
-    var temperature: Temperature
-    var feelsLikeTemperature: Temperature
-    var wind: Wind
+    var date: DateEntity?
+    var temperature: Temperature?
+    var feelsLikeTemperature: Temperature?
+    var wind: Wind?
     
-    var humidity: String //relative_humidity
-    var conditionDescription: String //weather
-    var imageURL: URL //icon_url
+    var humidity: String
+    var conditionDescription: String
+    var imageURL: URL
+
+}
+
+extension CurrentConditions: Mappable {
     
+    init() {
+        self.init(date: DateEntity(), temperature: Temperature(), feelsLikeTemperature: Temperature(), wind: Wind(), humidity: "", conditionDescription: "", imageURL: URL(string: "https://www.apple.com")!)
+    }
+    
+    static func makeInstance(_ map: Map) -> CurrentConditions? {
+        return CurrentConditions()
+    }
+    
+    mutating func map(with map: Map) {
+        map.bind(&humidity, key: "relative_humidity")
+        map.bind(&conditionDescription, key: "weather")
+        map.bind(&imageURL, key: "icon_url")
+        
+        //semi-mannual mapping =((((
+        
+        self.date = DateEntity.makeInstance(map.json, context: DateEntity.MappingKeysCustom.currentConditionsKeys)
+        self.temperature = Temperature.makeInstance(map.json, context: Temperature.MappingKeysCustom.temperatureKeys)
+        self.feelsLikeTemperature = Temperature.makeInstance(map.json, context: Temperature.MappingKeysCustom.feelsLikeKeys)
+        self.wind = Wind.makeInstance(map.json)
+    }
 }
