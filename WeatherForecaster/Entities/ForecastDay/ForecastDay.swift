@@ -9,21 +9,21 @@
 import Foundation
 
 //Short Forecast Info for Day
-struct DayForecast {
+struct ForecastDay {
     fileprivate(set) var date: DateEntity
     fileprivate(set) var highTemp: Temperature
     fileprivate(set) var lowTemp: Temperature
     fileprivate(set) var imageURL: URL
 }
 
-extension DayForecast: Mappable {
+extension ForecastDay: Mappable {
     
     init() {
         self.init(date: DateEntity(), highTemp: Temperature(), lowTemp: Temperature(), imageURL: URL(string: "https://www.apple.com")!)
     }
     
-    static func makeInstance(_ map: Map) -> DayForecast? {
-        return DayForecast()
+    static func makeInstance(_ map: Map) -> ForecastDay? {
+        return ForecastDay()
     }
     
     mutating func map(with map: Map) {
