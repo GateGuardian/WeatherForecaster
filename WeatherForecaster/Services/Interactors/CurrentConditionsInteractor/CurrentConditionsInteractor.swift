@@ -15,7 +15,7 @@ protocol CurrentConditionsInteractorInterface: class {
 
 protocol CurrentConditionsInteractorDelegate: class {
     func didFetchConditions(_ conditions: CurrentConditions)
-    func didFailToFetchConditions(withError error: CoreGatewayError)
+    func didFailToFetchConditions(withError error: Error)
 }
 
 class CurrentConditionsInteractor: CurrentConditionsInteractorInterface {

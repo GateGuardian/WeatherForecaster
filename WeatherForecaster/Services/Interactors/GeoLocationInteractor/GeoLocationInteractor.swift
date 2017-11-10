@@ -17,7 +17,7 @@ protocol GeoLocationInteractorInterface: class {
 
 protocol GeoLocationInteractorDelegate: class {
     func didFetchCurrentGeoLocation(_ location: GeoLocation)
-    func didFailToFetchGeoLocation(withError: CoreGatewayError)
+    func didFailToFetchGeoLocation(withError: Error)
 }
 
 class GeoLocationInteractor: NSObject, GeoLocationInteractorInterface {
@@ -95,7 +95,8 @@ extension GeoLocationInteractor: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        //TODO: create CoreGateWayError and send to delegate
+        let coreGatewayError = CoreGatewayError.networkError(detailedError(fromCLError: error))
+        delegate?.didFailToFetchGeoLocation(withError: coreGatewayError)
     }
 }
 
@@ -107,6 +108,25 @@ extension CLLocationManager {
     }
 }
 
-extension CoreGatewayError {
-    //TODO: init with error from CLLocationManager
+extension GeoLocationInteractor {
+    
+    enum LocationManagerErrorDescription {
+        static let errorLocationUnknown = "Location is currently unknown, but CL will keep trying"
+        static let errorDenied = "Access to location or ranging has been denied by the user"
+        static let errorNetwork = "Some network-related error"
+        static let errorUnknown = "Some location error"
+    }
+    
+    func detailedError(fromCLError: Error) -> Error {
+        switch (fromCLError as NSError).code {
+        case 0:
+            return NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : LocationManagerErrorDescription.errorLocationUnknown])
+        case 1:
+            return NSError(domain: "", code: 1, userInfo: [NSLocalizedDescriptionKey : LocationManagerErrorDescription.errorDenied])
+        case 2:
+            return NSError(domain: "", code: 2, userInfo: [NSLocalizedDescriptionKey : LocationManagerErrorDescription.errorNetwork])
+        default:
+            return NSError(domain: "", code: 3, userInfo: [NSLocalizedDescriptionKey : LocationManagerErrorDescription.errorUnknown])
+        }
+    }
 }

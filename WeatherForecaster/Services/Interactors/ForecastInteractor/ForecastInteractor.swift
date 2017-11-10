@@ -15,7 +15,7 @@ protocol ForecastInteractorInterface: class {
 
 protocol ForecastInteractorDelegate: class {
     func didFetchForecast(_ forecast: [ForecastDay])
-    func didFailToFetchForecast(withError error: CoreGatewayError)
+    func didFailToFetchForecast(withError error: Error)
 }
 
 class ForecastInteractor: ForecastInteractorInterface {

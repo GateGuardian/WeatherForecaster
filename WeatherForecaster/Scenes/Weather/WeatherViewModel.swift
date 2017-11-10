@@ -10,17 +10,23 @@ import Foundation
 
 class WeatherViewModel: WeatherViewModelInterface {
     
+    //MARK: WeatherViewModelInterface
+    
     var didUpdateWeatherForecast: (() -> Void)?
     var didUpdateCurrentConditions: (() -> Void)?
+    var didUpdateCityName: ((_ cityName: String ) -> Void)?
+    var didFinishLoading: (() -> Void)?
     
     var currentConditions: CurrentConditionViewModel? {
         didSet {
             didUpdateCurrentConditions?()
+            didFinishLoading?()
         }
     }
     var weatherForecastItems: [WeatherForecastItemViewModel] = [] {
         didSet {
             didUpdateWeatherForecast?()
+            didFinishLoading?()
         }
     }
     
@@ -28,6 +34,13 @@ class WeatherViewModel: WeatherViewModelInterface {
     var currentConditionsInteractor: CurrentConditionsInteractorInterface
     var forecastInteractor: ForecastInteractorInterface
     
+    func fetchData() {
+        geoLocationInteractor.fetchCurrentGeoLocation()
+    }
+    
+    func refreshData() {
+        geoLocationInteractor.refreshCurrentGeoLocation()
+    }
     
     //MARK: Lifecycle
     
@@ -36,20 +49,20 @@ class WeatherViewModel: WeatherViewModelInterface {
         self.currentConditionsInteractor = currentConditionsInteractor
         self.forecastInteractor = forecastInteractor
     }
-    
-    
-    func fetchData() {
-        //Fetching GeoLocation
-        geoLocationInteractor.fetchCurrentGeoLocation()
-    }
+
+    //MARK: Private
     
     private func conditionsViewModel(fromConditions conditions: CurrentConditions) -> CurrentConditionViewModel  {
-        return CurrentConditionViewModel(temperature: conditions.temperature?.prettyCelsius, feelsLikeTemperature: conditions.feelsLikeTemperature?.prettyCelsius,  humidity: conditions.humidity, windInfo: conditions.wind?.infoString(), date: conditions.date?.date.fullDate(), conditionDescription: conditions.conditionDescription, imageURL: conditions.imageURL)
+        return CurrentConditionViewModel(temperature: conditions.temperature?.prettyCelsius, feelsLikeTemperature: conditions.feelsLikeTemperature?.prettyCelsius,  humidity: conditions.humidity, pressure: conditions.prettyPressure, windInfo: conditions.wind?.infoString(), date: conditions.date?.date.fullDate(), conditionDescription: conditions.conditionDescription, imageURL: conditions.imageURL)
     }
     
     private func weatherForecastItems(fromForecast forecast: [ForecastDay]) -> [WeatherForecastItemViewModel] {
         let items = forecast.map { forecastDay -> WeatherForecastItemViewModel in
-            return WeatherForecastItemViewModel(minT: forecastDay.lowTemp.prettyCelsius, maxT: forecastDay.highTemp.prettyCelsius, day: forecastDay.date.date.weekDay(), imageURL: forecastDay.imageURL, isToday: forecastDay.date.date.isToday)
+            let isToday = forecastDay.date.date.isToday
+            let weekDay = forecastDay.date.date.weekDay()
+            let dateString = isToday ? weekDay + " today" : weekDay
+            let temperatureString = forecastDay.highTemp.prettyCelsius + "   " + forecastDay.lowTemp.prettyCelsius
+            return WeatherForecastItemViewModel(temperatureString: temperatureString, day: dateString, imageURL: forecastDay.imageURL)
         }
         return items
     }
@@ -57,14 +70,16 @@ class WeatherViewModel: WeatherViewModelInterface {
 
 extension WeatherViewModel: GeoLocationInteractorDelegate {
     func didFetchCurrentGeoLocation(_ location: GeoLocation) {
-        //TODO: update Title with City Name
-        //1. Fetch current conditions
+        //1. update Title with City Name
+        didUpdateCityName?(location.city)
+        //2. Fetch current conditions
         currentConditionsInteractor.fetchConditions(for: location)
-        //2. Fetch forecast
+        //3. Fetch forecast
         forecastInteractor.fetchForecast(for: location)
     }
     
     func didFailToFetchGeoLocation(withError: CoreGatewayError) {
+        didFinishLoading?()
         //TODO: show error
     }
 }
@@ -75,6 +90,7 @@ extension WeatherViewModel: CurrentConditionsInteractorDelegate {
     }
     
     func didFailToFetchConditions(withError error: CoreGatewayError) {
+        didFinishLoading?()
         //TODO: show error
     }
 }
@@ -85,6 +101,7 @@ extension WeatherViewModel: ForecastInteractorDelegate {
     }
     
     func didFailToFetchForecast(withError error: CoreGatewayError) {
+        didFinishLoading?()
         //TODO: show error
     }
 }

@@ -13,8 +13,8 @@ struct Temperature {
     fileprivate(set) var celsius: String
     fileprivate(set) var fahrenheit: String
     
-    var prettyCelsius: String { return "\(celsius)°" }
-    var prettyFahrenheit: String { return "\(fahrenheit)°" }
+    var prettyCelsius: String { return celsius.isEmpty ? celsius : "\(celsius)°" }
+    var prettyFahrenheit: String { return fahrenheit.isEmpty ? fahrenheit : "\(fahrenheit)°" }
 }
 
 extension Temperature: Mappable {

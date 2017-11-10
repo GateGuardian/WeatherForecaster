@@ -16,16 +16,21 @@ struct CurrentConditions {
     var feelsLikeTemperature: Temperature?
     var wind: Wind?
     
+    var pressure: String
     var humidity: String
     var conditionDescription: String
     var imageURL: URL
+    
+    var prettyPressure: String {
+        return pressure.isEmpty ? pressure : pressure + " mb"
+    }
 
 }
 
 extension CurrentConditions: Mappable {
     
     init() {
-        self.init(date: DateEntity(), temperature: Temperature(), feelsLikeTemperature: Temperature(), wind: Wind(), humidity: "", conditionDescription: "", imageURL: URL(string: "https://www.apple.com")!)
+        self.init(date: DateEntity(), temperature: Temperature(), feelsLikeTemperature: Temperature(), wind: Wind(), pressure: "", humidity: "", conditionDescription: "", imageURL: URL(string: "https://www.apple.com")!)
     }
     
     static func makeInstance(_ map: Map) -> CurrentConditions? {
@@ -36,6 +41,7 @@ extension CurrentConditions: Mappable {
         map.bind(&humidity, key: "relative_humidity")
         map.bind(&conditionDescription, key: "weather")
         map.bind(&imageURL, key: "icon_url")
+        map.bind(&pressure, key: "pressure_mb")
         
         //semi-mannual mapping =((((
         
