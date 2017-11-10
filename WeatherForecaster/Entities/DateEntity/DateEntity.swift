@@ -29,8 +29,7 @@ extension DateEntity: Mappable {
         let keys = map.context as? [String : String]
         map.bind(&timeInterval, key: keys?[MappingKeysDefault.timeInterval] ?? MappingKeysDefault.timeInterval)
         map.bind(&weekDay, key: keys?[MappingKeysDefault.weekDay] ?? MappingKeysDefault.weekDay)
-        map.bind(&date, key: keys?[MappingKeysDefault.date] ?? MappingKeysDefault.date)
-        
+        self.date = Date(timeIntervalSince1970: self.timeInterval)
     }
 }
 

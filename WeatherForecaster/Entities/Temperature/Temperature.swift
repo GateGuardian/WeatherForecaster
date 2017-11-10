@@ -13,6 +13,8 @@ struct Temperature {
     fileprivate(set) var celsius: String
     fileprivate(set) var fahrenheit: String
     
+    var prettyCelsius: String { return "\(celsius)°" }
+    var prettyFahrenheit: String { return "\(fahrenheit)°" }
 }
 
 extension Temperature: Mappable {
@@ -43,5 +45,4 @@ extension Temperature {
         static let feelsLikeKeys = [MappingKeysDefault.celsius : "feelslike_c", MappingKeysDefault.fahrenheit : "feelslike_f"]
         static let temperatureKeys = [MappingKeysDefault.celsius : "temp_c", MappingKeysDefault.fahrenheit : "temp_f"]
     }
-    
 }

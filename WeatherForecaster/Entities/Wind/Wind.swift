@@ -12,6 +12,10 @@ struct Wind {
     fileprivate(set) var direction: String
     fileprivate(set) var speedMph: String
     fileprivate(set) var speedKmh: String
+    
+    func infoString() -> String {
+        return direction + " " + speedKmh +  " km/h"
+    }
 }
 
 extension Wind: Mappable {

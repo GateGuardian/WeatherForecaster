@@ -13,33 +13,24 @@ import CoreLocation
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
-
+    lazy var dependencies: Dependencies = self.makeDependencies()
+    
+    //MARK: Private
+    
+    private func makeDependencies() -> Dependencies {
+        let coreGateway = CoreGateway(configuration: WebServiceConfiguration.default, restClient: RestClient())
+        let locationManager = CLLocationManager()
+        locationManager.desiredAccuracy = kCLLocationAccuracyKilometer
+        locationManager.requestWhenInUseAuthorization()
+        return DefaultDependencies(coreGateway: coreGateway, locationManager: locationManager)
+    }
+    
+    //MARK: UIApplicationDelegate
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        
-        //Testing Gateway
-//        let gateway = CoreGateway(configuration: WebServiceConfiguration.default, restClient: RestClient())
-//        let currentLocation = CLLocation(latitude: 48.6212534, longitude: 22.2849621)
-//        let _ = gateway.geoLocation(withLocation: currentLocation) { (locationResponse) in
-//            switch locationResponse {
-//            case .success(let data) :
-//                print(data)
-//                let _ = gateway.fetchCurrentConditions(location: data, completion: { (response) in
-//                    switch response {
-//                    case .success(let conditions) : print(conditions)
-//                    case .failure(let error): print(error)
-//                    }
-//                })
-//                let _ = gateway.fetchForecast(location: data, completion: { (response) in
-//                    switch response {
-//                    case .success(let data) : print(data)
-//                    case .failure(let error) : print(error)
-//                    }
-//                })
-//                
-//            case .failure(let error) : print(error)
-//            }
-//        }
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.rootViewController = WeatherBuilder(dependencies).build()
+        window?.makeKeyAndVisible()
         
         // Override point for customization after application launch.
         return true
