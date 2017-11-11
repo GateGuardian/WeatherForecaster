@@ -95,8 +95,7 @@ extension GeoLocationInteractor: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        let coreGatewayError = CoreGatewayError.networkError(detailedError(fromCLError: error))
-        delegate?.didFailToFetchGeoLocation(withError: coreGatewayError)
+        delegate?.didFailToFetchGeoLocation(withError: CoreLocationError(withError: error))
     }
 }
 
@@ -108,25 +107,18 @@ extension CLLocationManager {
     }
 }
 
-extension GeoLocationInteractor {
+enum CoreLocationError: Error {
+    case errorLocationUnknown
+    case errorDenied
+    case errorNetwork
+    case errorUnknown
     
-    enum LocationManagerErrorDescription {
-        static let errorLocationUnknown = "Location is currently unknown, but CL will keep trying"
-        static let errorDenied = "Access to location or ranging has been denied by the user"
-        static let errorNetwork = "Some network-related error"
-        static let errorUnknown = "Some location error"
-    }
-    
-    func detailedError(fromCLError: Error) -> Error {
-        switch (fromCLError as NSError).code {
-        case 0:
-            return NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : LocationManagerErrorDescription.errorLocationUnknown])
-        case 1:
-            return NSError(domain: "", code: 1, userInfo: [NSLocalizedDescriptionKey : LocationManagerErrorDescription.errorDenied])
-        case 2:
-            return NSError(domain: "", code: 2, userInfo: [NSLocalizedDescriptionKey : LocationManagerErrorDescription.errorNetwork])
-        default:
-            return NSError(domain: "", code: 3, userInfo: [NSLocalizedDescriptionKey : LocationManagerErrorDescription.errorUnknown])
+    init(withError: Error) {
+        switch (withError as NSError).code  {
+            case 0: self = .errorLocationUnknown
+            case 1: self = .errorDenied
+            case 2: self = .errorNetwork
+            default: self = .errorUnknown
         }
     }
 }

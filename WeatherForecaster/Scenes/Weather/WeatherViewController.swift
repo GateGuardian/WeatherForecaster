@@ -17,6 +17,7 @@ protocol WeatherViewModelInterface {
     var didUpdateCurrentConditions: (() -> Void)? { get set }
     var didUpdateCityName: ((_ cityName: String ) -> Void)? { get set }
     var didFinishLoading: (() -> Void)? { get set }
+    var onShowAlert: ((_ errorDescription: ErrorDescription) -> Void)? { get set }
     
     func fetchData()
     func refreshData()
@@ -89,6 +90,11 @@ class WeatherViewController: UIViewController {
         }
         viewModel.didFinishLoading = { [weak self] in
             self?.refreshControll.endRefreshing()
+        }
+        viewModel.onShowAlert = { [weak self] errorDescription in
+            let alert = UIAlertController(title: errorDescription.title, message: errorDescription.message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction.init(title: "OK", style: .destructive, handler: nil))
+            self?.present(alert, animated: true)
         }
     }
     

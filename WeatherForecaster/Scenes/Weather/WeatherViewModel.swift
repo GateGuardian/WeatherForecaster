@@ -16,6 +16,7 @@ class WeatherViewModel: WeatherViewModelInterface {
     var didUpdateCurrentConditions: (() -> Void)?
     var didUpdateCityName: ((_ cityName: String ) -> Void)?
     var didFinishLoading: (() -> Void)?
+    var onShowAlert: ((_ errorDescription: ErrorDescription) -> Void)?
     
     var currentConditions: CurrentConditionViewModel? {
         didSet {
@@ -66,6 +67,12 @@ class WeatherViewModel: WeatherViewModelInterface {
         }
         return items
     }
+    
+    private func show(error: Error) {
+        didFinishLoading?()
+        let errorDescription = ErrorFormatter().string(from: error)
+        onShowAlert?(errorDescription)
+    }
 }
 
 extension WeatherViewModel: GeoLocationInteractorDelegate {
@@ -78,9 +85,8 @@ extension WeatherViewModel: GeoLocationInteractorDelegate {
         forecastInteractor.fetchForecast(for: location)
     }
     
-    func didFailToFetchGeoLocation(withError: CoreGatewayError) {
-        didFinishLoading?()
-        //TODO: show error
+    func didFailToFetchGeoLocation(withError: Error) {
+        show(error: withError)
     }
 }
 
@@ -89,9 +95,8 @@ extension WeatherViewModel: CurrentConditionsInteractorDelegate {
         currentConditions = conditionsViewModel(fromConditions: conditions)
     }
     
-    func didFailToFetchConditions(withError error: CoreGatewayError) {
-        didFinishLoading?()
-        //TODO: show error
+    func didFailToFetchConditions(withError error: Error) {
+        show(error: error)
     }
 }
 
@@ -100,8 +105,7 @@ extension WeatherViewModel: ForecastInteractorDelegate {
         weatherForecastItems = weatherForecastItems(fromForecast: forecast)
     }
     
-    func didFailToFetchForecast(withError error: CoreGatewayError) {
-        didFinishLoading?()
-        //TODO: show error
+    func didFailToFetchForecast(withError error: Error) {
+        show(error: error)
     }
 }
